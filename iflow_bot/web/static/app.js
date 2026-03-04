@@ -1,3 +1,212 @@
+const I18N_DICT = {
+  "zh-CN": {
+    "nav.dashboard": "仪表盘",
+    "nav.chat": "Web 对话",
+    "nav.conversations": "全渠道对话",
+    "nav.config": "配置中心",
+    "nav.logs": "实时日志",
+    "common.on": "开启",
+    "common.off": "关闭",
+    "common.send": "发送",
+    "common.filter": "筛选",
+    "common.refresh": "刷新",
+    "common.close": "关闭",
+    "common.save": "保存",
+    "common.view": "查看",
+    "common.channel": "渠道",
+    "common.sessions": "会话数",
+    "common.messages": "消息数",
+    "chat.title": "Web 对话 · 实时控制台",
+    "chat.session_list": "会话列表",
+    "chat.sessions": "会话",
+    "chat.session_history": "会话历史",
+    "chat.session_history_hint": "点击直接接管会话",
+    "chat.more_actions": "更多操作",
+    "chat.pinned": "置顶",
+    "chat.pin": "置顶",
+    "chat.unpin": "取消置顶",
+    "chat.delete": "删除",
+    "chat.model": "模型",
+    "chat.model_context": "模型上下文",
+    "chat.custom_model_id": "自定义模型 ID",
+    "chat.custom_model_placeholder": "例如: minimax-m2.5",
+    "chat.runtime_mode": "运行模式",
+    "chat.think_mode": "思考模式",
+    "chat.input_placeholder": "输入消息，Enter 发送 / Shift+Enter 换行",
+    "chat.new_chat": "新对话",
+    "chat.ready": "就绪",
+    "chat.runtime_panel": "运行态面板",
+    "chat.runtime_state": "运行态",
+    "chat.elapsed": "耗时",
+    "chat.text_chunks": "文本块",
+    "chat.tool_calls": "工具调用",
+    "chat.thought_chunks": "思考块",
+    "chat.total_tokens": "总 Tokens",
+    "chat.phases": "阶段",
+    "chat.events": "事件",
+    "phase.preparing": "准备中",
+    "phase.runtime_config": "应用运行参数",
+    "phase.waiting_first_chunk": "等待首包",
+    "phase.streaming": "流式输出",
+    "phase.finalizing": "收尾持久化",
+    "phase.failed": "异常终止",
+    "conv.title": "全渠道对话",
+    "conv.all_channels": "全部渠道",
+    "conv.search_placeholder": "搜索 chat_id 或最后消息...",
+    "conv.last_time": "最后时间",
+    "conv.last_message": "最后消息",
+    "conv.detail_title": "对话详情",
+    "conv.back_to_list": "返回会话列表",
+    "dashboard.gateway_status": "Gateway 状态",
+    "dashboard.gateway_running": "运行中",
+    "dashboard.gateway_stopped": "已停止",
+    "dashboard.total_sessions": "会话总数",
+    "dashboard.cover_all_channels": "覆盖所有渠道",
+    "dashboard.total_messages": "消息总量",
+    "dashboard.aggregated_by_recorder": "按 recorder 数据聚合",
+    "dashboard.channel_overview": "渠道概览",
+    "dashboard.recent_errors": "最近错误",
+    "config.enabled_channels": "启用渠道",
+    "config.total_configurable_prefix": "共",
+    "config.total_configurable_suffix": "个可配置渠道",
+    "config.timeout": "超时",
+    "config.title": "配置中心",
+    "config.subtitle": "左侧渠道列表，右侧弹窗编辑字段配置。",
+    "config.file": "配置文件",
+    "config.edit_channel": "编辑配置",
+    "config.advanced_json": "高级：全量 JSON 编辑",
+    "config.json_editor": "JSON 编辑器",
+    "config.validate_hint": "建议：先“校验配置”再保存",
+    "config.validate": "校验配置",
+    "config.save_config": "保存配置",
+    "config.channel_modal_title": "渠道配置",
+    "logs.title": "实时日志",
+    "logs.source_gateway": "Gateway 日志",
+    "logs.source_web": "Web 控制台日志",
+    "logs.source_all": "全部日志",
+    "logs.keyword_placeholder": "筛选关键字...",
+    "logs.auto_follow": "自动跟随",
+    "logs.current_source": "当前来源",
+    "logs.source_hint": "支持 Web 与 Gateway 双日志源",
+  },
+  "en-US": {
+    "nav.dashboard": "Dashboard",
+    "nav.chat": "Web Chat",
+    "nav.conversations": "Conversations",
+    "nav.config": "Config",
+    "nav.logs": "Live Logs",
+    "common.on": "On",
+    "common.off": "Off",
+    "common.send": "Send",
+    "common.filter": "Filter",
+    "common.refresh": "Refresh",
+    "common.close": "Close",
+    "common.save": "Save",
+    "common.view": "View",
+    "common.channel": "Channel",
+    "common.sessions": "Sessions",
+    "common.messages": "Messages",
+    "chat.title": "Web Chat · Realtime Console",
+    "chat.session_list": "Session list",
+    "chat.sessions": "Sessions",
+    "chat.session_history": "Session history",
+    "chat.session_history_hint": "Click to take over the session",
+    "chat.more_actions": "More actions",
+    "chat.pinned": "Pinned",
+    "chat.pin": "Pin",
+    "chat.unpin": "Unpin",
+    "chat.delete": "Delete",
+    "chat.model": "Model",
+    "chat.model_context": "Model context",
+    "chat.custom_model_id": "Custom model ID",
+    "chat.custom_model_placeholder": "e.g. minimax-m2.5",
+    "chat.runtime_mode": "Runtime mode",
+    "chat.think_mode": "Think mode",
+    "chat.input_placeholder": "Type a message, Enter to send / Shift+Enter for newline",
+    "chat.new_chat": "New Chat",
+    "chat.ready": "Ready",
+    "chat.runtime_panel": "Runtime panel",
+    "chat.runtime_state": "Runtime",
+    "chat.elapsed": "Elapsed",
+    "chat.text_chunks": "Text Chunks",
+    "chat.tool_calls": "Tool Calls",
+    "chat.thought_chunks": "Thought Chunks",
+    "chat.total_tokens": "Total Tokens",
+    "chat.phases": "Phases",
+    "chat.events": "Events",
+    "phase.preparing": "Preparing",
+    "phase.runtime_config": "Applying runtime config",
+    "phase.waiting_first_chunk": "Waiting first chunk",
+    "phase.streaming": "Streaming",
+    "phase.finalizing": "Finalizing",
+    "phase.failed": "Failed",
+    "conv.title": "Conversations",
+    "conv.all_channels": "All channels",
+    "conv.search_placeholder": "Search chat_id or last message...",
+    "conv.last_time": "Last time",
+    "conv.last_message": "Last message",
+    "conv.detail_title": "Conversation Detail",
+    "conv.back_to_list": "Back to list",
+    "dashboard.gateway_status": "Gateway Status",
+    "dashboard.gateway_running": "Running",
+    "dashboard.gateway_stopped": "Stopped",
+    "dashboard.total_sessions": "Total Sessions",
+    "dashboard.cover_all_channels": "Across all channels",
+    "dashboard.total_messages": "Total Messages",
+    "dashboard.aggregated_by_recorder": "Aggregated from recorder data",
+    "dashboard.channel_overview": "Channel Overview",
+    "dashboard.recent_errors": "Recent Errors",
+    "config.enabled_channels": "Enabled Channels",
+    "config.total_configurable_prefix": "Total",
+    "config.total_configurable_suffix": "configurable channels",
+    "config.timeout": "Timeout",
+    "config.title": "Config Center",
+    "config.subtitle": "Channel list on the left, field editor in modal on the right.",
+    "config.file": "Config file",
+    "config.edit_channel": "Edit Config",
+    "config.advanced_json": "Advanced: Full JSON Editor",
+    "config.json_editor": "JSON Editor",
+    "config.validate_hint": "Tip: Validate config before saving",
+    "config.validate": "Validate Config",
+    "config.save_config": "Save Config",
+    "config.channel_modal_title": "Channel Config",
+    "logs.title": "Live Logs",
+    "logs.source_gateway": "Gateway Logs",
+    "logs.source_web": "Web Console Logs",
+    "logs.source_all": "All Logs",
+    "logs.keyword_placeholder": "Filter keyword...",
+    "logs.auto_follow": "Auto follow",
+    "logs.current_source": "Current source",
+    "logs.source_hint": "Supports both Web and Gateway logs",
+  },
+};
+
+function _normalizeLang(lang) {
+  return (lang || "").toLowerCase().startsWith("zh") ? "zh-CN" : "en-US";
+}
+
+let _lang = _normalizeLang(window.localStorage?.getItem("iflow_console_lang") || navigator.language || "zh-CN");
+
+function t(key) {
+  return I18N_DICT[_lang]?.[key] || I18N_DICT["zh-CN"]?.[key] || key;
+}
+
+function _applyI18n() {
+  document.documentElement.lang = _lang;
+  document.querySelectorAll("[data-i18n]").forEach((node) => {
+    const key = node.dataset.i18n || "";
+    if (key) node.textContent = t(key);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+    const key = node.dataset.i18nPlaceholder || "";
+    if (key) node.setAttribute("placeholder", t(key));
+  });
+  document.querySelectorAll("[data-i18n-title]").forEach((node) => {
+    const key = node.dataset.i18nTitle || "";
+    if (key) node.setAttribute("title", t(key));
+  });
+}
+
 async function validateConfig(token) {
   const content = document.getElementById("config-editor")?.value || "";
   const resultEl = document.getElementById("validate-result");
@@ -6,14 +215,14 @@ async function validateConfig(token) {
   form.set("content", content);
   const url = token ? `/api/config/validate?token=${encodeURIComponent(token)}` : "/api/config/validate";
 
-  resultEl.textContent = "校验中...";
+  resultEl.textContent = _lang === "en-US" ? "Validating..." : "校验中...";
   try {
     const resp = await fetch(url, { method: "POST", body: form });
     const data = await resp.json();
-    resultEl.textContent = data.message || "校验完成";
+    resultEl.textContent = data.message || (_lang === "en-US" ? "Validation complete" : "校验完成");
     resultEl.style.color = data.ok ? "#31d0aa" : "#ff5d7f";
   } catch (e) {
-    resultEl.textContent = `校验失败: ${e}`;
+    resultEl.textContent = _lang === "en-US" ? `Validation failed: ${e}` : `校验失败: ${e}`;
     resultEl.style.color = "#ff5d7f";
   }
 }
@@ -26,10 +235,13 @@ function openChannelConfigModal(channelName, enabledFlag = "0") {
   const template = document.getElementById(`channel-config-template-${channelName}`);
   if (!shell || !title || !meta || !body || !template) return;
 
-  title.textContent = `${channelName.toUpperCase()} 配置`;
-  meta.textContent = enabledFlag === "1" ? "当前状态：在线" : "当前状态：关闭";
+  title.textContent = _lang === "en-US" ? `${channelName.toUpperCase()} Config` : `${channelName.toUpperCase()} 配置`;
+  meta.textContent = enabledFlag === "1"
+    ? (_lang === "en-US" ? "Status: Online" : "当前状态：在线")
+    : (_lang === "en-US" ? "Status: Disabled" : "当前状态：关闭");
   body.innerHTML = "";
   body.appendChild(template.content.cloneNode(true));
+  _applyI18n();
   shell.classList.remove("hidden");
   document.body.classList.add("modal-open");
 }
@@ -92,18 +304,18 @@ async function setTargetPinned(channel, chatId, pinned, token, event) {
     const resp = await fetch(url, { method: "POST", body: form });
     const data = await resp.json();
     if (!data.ok) {
-      _setStatus(data.message || "置顶失败", "#ff5d7f");
+      _setStatus(data.message || (_lang === "en-US" ? "Pin failed" : "置顶失败"), "#ff5d7f");
       return;
     }
     window.location.reload();
   } catch (e) {
-    _setStatus(`置顶失败: ${e}`, "#ff5d7f");
+    _setStatus(_lang === "en-US" ? `Pin failed: ${e}` : `置顶失败: ${e}`, "#ff5d7f");
   }
 }
 
 async function deleteTargetHistory(channel, chatId, token, event) {
   if (event) event.stopPropagation();
-  if (!window.confirm(`确认删除会话 ${channel}:${chatId} 吗？`)) return;
+  if (!window.confirm(_lang === "en-US" ? `Delete session ${channel}:${chatId}?` : `确认删除会话 ${channel}:${chatId} 吗？`)) return;
   const form = new FormData();
   form.set("channel", channel);
   form.set("chat_id", chatId);
@@ -112,7 +324,7 @@ async function deleteTargetHistory(channel, chatId, token, event) {
     const resp = await fetch(url, { method: "POST", body: form });
     const data = await resp.json();
     if (!data.ok) {
-      _setStatus(data.message || "删除失败", "#ff5d7f");
+      _setStatus(data.message || (_lang === "en-US" ? "Delete failed" : "删除失败"), "#ff5d7f");
       return;
     }
     const item = _findHistoryItem(channel, chatId);
@@ -128,13 +340,13 @@ async function deleteTargetHistory(channel, chatId, token, event) {
       } else {
         const board = document.getElementById("chat-board");
         if (board) board.innerHTML = "";
-        _setStatus("会话已删除", "#31d0aa");
+        _setStatus(_lang === "en-US" ? "Session deleted" : "会话已删除", "#31d0aa");
       }
     } else {
-      _setStatus("会话已删除", "#31d0aa");
+      _setStatus(_lang === "en-US" ? "Session deleted" : "会话已删除", "#31d0aa");
     }
   } catch (e) {
-    _setStatus(`删除失败: ${e}`, "#ff5d7f");
+    _setStatus(_lang === "en-US" ? `Delete failed: ${e}` : `删除失败: ${e}`, "#ff5d7f");
   }
 }
 
@@ -196,13 +408,16 @@ async function loadChatHistory(token) {
     const resp = await fetch(`/api/chat/history?${query.toString()}`);
     const data = await resp.json();
     if (!data.ok) {
-      _setStatus("历史加载失败", "#ff5d7f");
+      _setStatus(_lang === "en-US" ? "Failed to load history" : "历史加载失败", "#ff5d7f");
       return;
     }
     _renderMessagesToBoard(data.messages || []);
-    _setStatus(`已加载历史：${data.channel}:${data.chat_id}`, "#31d0aa");
+    _setStatus(
+      _lang === "en-US" ? `History loaded: ${data.channel}:${data.chat_id}` : `已加载历史：${data.channel}:${data.chat_id}`,
+      "#31d0aa",
+    );
   } catch (e) {
-    _setStatus(`历史加载失败: ${e}`, "#ff5d7f");
+    _setStatus(_lang === "en-US" ? `Failed to load history: ${e}` : `历史加载失败: ${e}`, "#ff5d7f");
   }
 }
 
@@ -232,10 +447,10 @@ function _scrollChatToBottom() {
 
 function _runtimeLabel(capability) {
   const map = {
-    "session/set_mode": "运行模式动态切换",
-    "session/set_model": "模型动态切换",
-    "session/set_think": "思考开关动态切换",
-    "model_runtime_config": "运行时模型配置",
+    "session/set_mode": _lang === "en-US" ? "Runtime mode switch" : "运行模式动态切换",
+    "session/set_model": _lang === "en-US" ? "Model switch" : "模型动态切换",
+    "session/set_think": _lang === "en-US" ? "Think mode switch" : "思考开关动态切换",
+    "model_runtime_config": _lang === "en-US" ? "Runtime model config" : "运行时模型配置",
   };
   return map[capability] || capability;
 }
@@ -406,19 +621,19 @@ function _startAssistantBubble(modelLabel, modeLabel, thinkEnabled) {
   const div = document.createElement("div");
   div.className = "bubble assistant";
   div.innerHTML = `
-    <div class="meta">assistant · ${modelLabel} · ${modeLabel} · think:${thinkEnabled ? "on" : "off"}</div>
+    <div class="meta">${_lang === "en-US" ? "assistant" : "assistant"} · ${modelLabel} · ${modeLabel} · think:${thinkEnabled ? "on" : "off"}</div>
     <div class="md-content"></div>
     <div class="bubble-stream-sections">
       <section class="bubble-section bubble-plan hidden">
-        <h5>Todo / Plan</h5>
+        <h5>${_lang === "en-US" ? "Todo / Plan" : "Todo / Plan"}</h5>
         <div class="plan-list"></div>
       </section>
       <section class="bubble-section bubble-tools hidden">
-        <h5>工具调用</h5>
+        <h5>${_lang === "en-US" ? "Tool Calls" : "工具调用"}</h5>
         <div class="tools-panel-inline"></div>
       </section>
       <section class="bubble-section bubble-files hidden">
-        <h5>文件引用</h5>
+        <h5>${_lang === "en-US" ? "File References" : "文件引用"}</h5>
         <div class="file-ref-list"></div>
       </section>
     </div>`;
@@ -526,10 +741,10 @@ function _upsertToolCard(tool) {
   pill.className = `status-pill ${merged.status}`;
 
   const argsNode = card.querySelector(".tool-args");
-  argsNode.innerHTML = `<small>args</small><pre></pre>`;
+  argsNode.innerHTML = `<small>${_lang === "en-US" ? "args" : "args"}</small><pre></pre>`;
   argsNode.querySelector("pre").textContent = JSON.stringify(merged.args || {}, null, 2);
   const outputNode = card.querySelector(".tool-output");
-  outputNode.innerHTML = `<small>output</small><pre></pre>`;
+  outputNode.innerHTML = `<small>${_lang === "en-US" ? "output" : "output"}</small><pre></pre>`;
   outputNode.querySelector("pre").textContent = merged.output || "(empty)";
 }
 
@@ -626,17 +841,17 @@ function _handleStreamEvent(eventType, data) {
     }
   } else if (eventType === "plan") {
     _renderPlanEntries(data.entries || []);
-    _appendEventLine("status", "收到任务清单更新");
+    _appendEventLine("status", _lang === "en-US" ? "Task plan updated" : "收到任务清单更新");
   } else if (eventType === "usage") {
     const total = data.total_tokens ?? "-";
     _updateMetric("metric-tokens", total);
   } else if (eventType === "file_ref") {
     _addFileRef(data || {});
   } else if (eventType === "warning") {
-    _appendEventLine("warning", data.message || "warning");
+    _appendEventLine("warning", data.message || (_lang === "en-US" ? "warning" : "warning"));
   } else if (eventType === "approval") {
     const t = (data.update_type || "approval").toString();
-    _appendEventLine("status", `需要确认: ${t}`);
+    _appendEventLine("status", _lang === "en-US" ? `Approval required: ${t}` : `需要确认: ${t}`);
   } else if (eventType === "raw_event") {
     const t = (data.update_type || "event").toString();
     _appendEventLine("status", `raw: ${t}`);
@@ -652,7 +867,12 @@ function _handleStreamEvent(eventType, data) {
       const signature = uniqueUnsupported.slice().sort().join("|");
       if (webChatState.lastUnsupportedSignature !== signature) {
         const readable = uniqueUnsupported.map(_runtimeLabel).join("、");
-        _appendEventLine("status", `runtime 部分能力不可用：${readable}（当前 ACP/stdio 运行时接口不支持动态设置，已自动降级）`);
+        _appendEventLine(
+          "status",
+          _lang === "en-US"
+            ? `Runtime capabilities unavailable: ${readable} (ACP/stdio runtime API does not support dynamic updates, downgraded automatically)`
+            : `runtime 部分能力不可用：${readable}（当前 ACP/stdio 运行时接口不支持动态设置，已自动降级）`,
+        );
         const seenReason = new Set();
         unsupportedDetails.forEach((item) => {
           const label = item?.label || _runtimeLabel(item?.key || "");
@@ -666,7 +886,12 @@ function _handleStreamEvent(eventType, data) {
         webChatState.lastUnsupportedSignature = signature;
       }
     } else {
-      _appendEventLine("status", `runtime已应用 model=${data.model_applied || "-"}`);
+      _appendEventLine(
+        "status",
+        _lang === "en-US"
+          ? `Runtime applied model=${data.model_applied || "-"}`
+          : `runtime已应用 model=${data.model_applied || "-"}`,
+      );
     }
   } else if (eventType === "phase") {
     _setPhase(data.phase || "", data.status || "pending");
@@ -676,10 +901,10 @@ function _handleStreamEvent(eventType, data) {
       _renderMarkdownNode(webChatState.currentAssistantContentNode, data.content);
       _scrollChatToBottom();
     }
-    _setStatus("已完成", "#31d0aa");
+    _setStatus(_lang === "en-US" ? "Completed" : "已完成", "#31d0aa");
     _setRuntimeTag("done");
   } else if (eventType === "error") {
-    _setStatus(data.message || "执行出错", "#ff5d7f");
+    _setStatus(data.message || (_lang === "en-US" ? "Execution error" : "执行出错"), "#ff5d7f");
     _setRuntimeTag("error");
     _setPhase("failed", "failed");
     _appendEventLine("error", data.message || "unknown error");
@@ -729,7 +954,7 @@ async function sendWebChat(event, token) {
   _appendChatBubble("user", message);
   input.value = "";
   _setSendBusy(true);
-  _setStatus("流式处理中...", "#a7b4d6");
+  _setStatus(_lang === "en-US" ? "Streaming..." : "流式处理中...", "#a7b4d6");
   _setRuntimeTag("streaming");
   webChatState.chunkCount = 0;
   webChatState.thoughtCount = 0;
@@ -757,7 +982,7 @@ async function sendWebChat(event, token) {
   try {
     const resp = await fetch(url, { method: "POST", body: form });
     if (!resp.ok || !resp.body) {
-      _setStatus(`请求失败: HTTP ${resp.status}`, "#ff5d7f");
+      _setStatus(_lang === "en-US" ? `Request failed: HTTP ${resp.status}` : `请求失败: HTTP ${resp.status}`, "#ff5d7f");
       _setRuntimeTag("error");
       return false;
     }
@@ -774,7 +999,7 @@ async function sendWebChat(event, token) {
       parsed.frames.forEach(({ event, payload }) => _handleStreamEvent(event, payload));
     }
   } catch (e) {
-    _setStatus(`请求失败: ${e}`, "#ff5d7f");
+    _setStatus(_lang === "en-US" ? `Request failed: ${e}` : `请求失败: ${e}`, "#ff5d7f");
     _setRuntimeTag("error");
     _appendEventLine("error", String(e));
   } finally {
@@ -810,15 +1035,26 @@ async function resetWebChat(token) {
     _updateMetric("metric-elapsed", "0.0s");
     _resetPhases();
     _setRuntimeTag("idle");
-    _setStatus("已开启新对话", "#31d0aa");
+    _setStatus(_lang === "en-US" ? "Started a new chat" : "已开启新对话", "#31d0aa");
     webChatState.currentAssistantContentNode = null;
     webChatState.currentAssistantRaw = "";
   } catch (e) {
-    _setStatus(`重置失败: ${e}`, "#ff5d7f");
+    _setStatus(_lang === "en-US" ? `Reset failed: ${e}` : `重置失败: ${e}`, "#ff5d7f");
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const langSwitch = document.getElementById("console-lang-switch");
+  if (langSwitch) {
+    langSwitch.value = _lang;
+    langSwitch.addEventListener("change", () => {
+      _lang = _normalizeLang(langSwitch.value);
+      window.localStorage?.setItem("iflow_console_lang", _lang);
+      _applyI18n();
+    });
+  }
+  _applyI18n();
+
   const modelContextRaw = document.getElementById("chat-model-context-data")?.textContent || "{}";
   try {
     webChatState.modelContexts = JSON.parse(modelContextRaw);
