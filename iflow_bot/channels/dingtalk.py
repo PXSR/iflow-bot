@@ -155,6 +155,8 @@ class DingTalkChannel(BaseChannel):
         self._streaming_buffers: Dict[str, str] = {}
         self._streaming_card_ids: Dict[str, str] = {}
         self._streaming_end: Set[str] = set()
+        self._streaming_last_sent_content: Dict[str, str] = {}
+        self._streaming_last_sent_at: Dict[str, float] = {}
 
         # 后台任务
         self._background_tasks: Set[asyncio.Task] = set()
@@ -212,6 +214,8 @@ class DingTalkChannel(BaseChannel):
         for task in self._background_tasks:
             task.cancel()
         self._background_tasks.clear()
+        self._streaming_last_sent_content.clear()
+        self._streaming_last_sent_at.clear()
 
         logger.info(f"[{self.name}] DingTalk bot stopped")
 
@@ -457,16 +461,64 @@ class DingTalkChannel(BaseChannel):
             # 使用 AI Card 流式更新
             await self._stream_ai_card(card, full_content, is_final)
         else:
-            # 降级为 Markdown 发送（仅在最终消息时发送）
-            if is_final:
-                is_group = chat_id.startswith("cid")
-                await self._send_markdown(chat_id, full_content, is_group)
+            # 降级为 Markdown 流式发送（createAndDeliver 失败时仍保持可见输出）
+            is_group = chat_id.startswith("cid")
+            await self._send_streaming_markdown_fallback(
+                chat_id=chat_id,
+                target_key=target_key,
+                full_content=full_content,
+                is_group=is_group,
+                is_final=is_final,
+            )
 
         # 清理
         if is_final:
             self._streaming_buffers.pop(target_key, None)
             self._streaming_card_ids.pop(target_key, None)
             self._streaming_end.discard(target_key)
+            self._streaming_last_sent_content.pop(target_key, None)
+            self._streaming_last_sent_at.pop(target_key, None)
+
+    async def _send_streaming_markdown_fallback(
+        self,
+        chat_id: str,
+        target_key: str,
+        full_content: str,
+        is_group: bool,
+        is_final: bool,
+    ) -> None:
+        """Fallback streaming when AI Card is unavailable.
+
+        DingTalk markdown messages cannot be edited in-place via current path,
+        so we throttle progressive sends to keep output visible without flooding.
+        """
+        text = (full_content or "").strip()
+        if not text:
+            return
+
+        last_content = self._streaming_last_sent_content.get(target_key, "")
+        now = time.time()
+        last_sent_at = self._streaming_last_sent_at.get(target_key, 0.0)
+
+        # Send on first visible chunk, then throttle by time/size delta.
+        should_send_progress = (
+            last_content == ""
+            or (len(text) - len(last_content) >= 80)
+            or (now - last_sent_at >= 2.0)
+        )
+
+        if is_final:
+            # Ensure final full response is visible once.
+            if text != last_content:
+                await self._send_markdown(chat_id, text, is_group)
+                self._streaming_last_sent_content[target_key] = text
+                self._streaming_last_sent_at[target_key] = now
+            return
+
+        if should_send_progress and text != last_content:
+            await self._send_markdown(chat_id, text, is_group)
+            self._streaming_last_sent_content[target_key] = text
+            self._streaming_last_sent_at[target_key] = now
 
     async def _on_message(
         self,
