@@ -32,6 +32,8 @@ from typing import Any, Callable, Coroutine, Optional
 
 from loguru import logger
 
+from iflow_bot.config.loader import DEFAULT_TIMEOUT
+
 
 def _is_windows() -> bool:
     """检查是否为 Windows 平台。"""
@@ -106,12 +108,13 @@ class StdioACPClient:
     """
     
     PROTOCOL_VERSION = 1
+    LINE_LIMIT = 10 * 1024 * 1024  # 10MB - readline 最大行长度，防止大 JSON 被截断
     
     def __init__(
         self,
         iflow_path: str = "iflow",
         workspace: Optional[Path] = None,
-        timeout: int = 300,
+        timeout: int = DEFAULT_TIMEOUT,
     ):
         self.iflow_path = iflow_path
         self.workspace = workspace or Path.cwd()
@@ -123,6 +126,7 @@ class StdioACPClient:
         self._request_id = 0
         self._pending_requests: dict[int, asyncio.Future] = {}
         self._receive_task: Optional[asyncio.Task] = None
+        self._stderr_receive_task: Optional[asyncio.Task] = None  # 持续读取 stderr 防止缓冲区满导致死锁
         self._message_queue: asyncio.Queue[dict] = asyncio.Queue()
         self._session_queues: dict[str, asyncio.Queue[dict]] = {}
         self._prompt_lock = asyncio.Lock()  # 保证请求写入的原子性，以及作为并发回退保障
@@ -161,7 +165,14 @@ class StdioACPClient:
             
             self._started = True
             
+            # 设置 StreamReader 的 limit，防止大 JSON 行被截断
+            if self._process.stdout:
+                self._process.stdout._limit = self.LINE_LIMIT
+            if self._process.stderr:
+                self._process.stderr._limit = self.LINE_LIMIT
+            
             self._receive_task = asyncio.create_task(self._receive_loop())
+            self._stderr_receive_task = asyncio.create_task(self._stderr_receive_loop())
             
             logger.info(f"StdioACP started: pid={self._process.pid}")
             
@@ -179,6 +190,14 @@ class StdioACPClient:
             except asyncio.CancelledError:
                 pass
             self._receive_task = None
+        
+        if self._stderr_receive_task:
+            self._stderr_receive_task.cancel()
+            try:
+                await self._stderr_receive_task
+            except asyncio.CancelledError:
+                pass
+            self._stderr_receive_task = None
         
         if self._process:
             try:
@@ -247,6 +266,33 @@ class StdioACPClient:
                 break
         
         logger.debug("StdioACP receive loop ended")
+    
+    async def _stderr_receive_loop(self) -> None:
+        """stderr 接收循环 - 持续读取 stderr 防止缓冲区满导致进程阻塞。"""
+        while self._started and self._process and self._process.stderr:
+            try:
+                line = await asyncio.wait_for(
+                    self._process.stderr.readline(),
+                    timeout=1.0
+                )
+                
+                if not line:
+                    break
+                
+                raw = line.decode("utf-8", errors="replace").strip()
+                
+                if raw:
+                    logger.debug(f"iflow stderr: {raw[:200]}")
+                    
+            except asyncio.TimeoutError:
+                continue
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.debug(f"StdioACP stderr receive error: {e}")
+                break
+        
+        logger.debug("StdioACP stderr receive loop ended")
     
     def _next_request_id(self) -> int:
         self._request_id += 1
@@ -662,7 +708,7 @@ class StdioACPAdapter:
         self,
         iflow_path: str = "iflow",
         workspace: Optional[Path] = None,
-        timeout: int = 300,
+        timeout: int = DEFAULT_TIMEOUT,
         default_model: str = "glm-5",
         thinking: bool = False,
         active_compress_trigger_tokens: int = 88888,
