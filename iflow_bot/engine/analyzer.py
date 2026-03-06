@@ -183,8 +183,9 @@ class ResultAnalyzer:
             try:
                 if not Path(file_path).is_file():
                     continue
-            except OSError:
+            except OSError as e:
                 # Skip paths that cause errors (e.g., network paths on Windows)
+                logger.debug(f"Skip inaccessible path: {file_path} ({e})")
                 continue
 
             ext = Path(file_path).suffix.lower()
