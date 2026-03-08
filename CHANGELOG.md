@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+- refactor(cross-platform): Remove shell-script runtime paths in favor of Python-managed startup/test entrypoints, including Docker entrypoint migration and MCP proxy script cleanup.
+- fix(windows): Add a unified command resolver for `npm`/`iflow` with explicit Windows shim support (`.cmd`/`.bat`), reducing reliance on implicit shell behavior and aligning command execution paths.
+
 ## v0.3.4 - 2026-03-06
 
 - fix(cli): Resolve version from installed package metadata first to avoid `v0.0.0` on Windows/installed runs.
