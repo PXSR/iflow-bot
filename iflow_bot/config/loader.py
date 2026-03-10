@@ -10,7 +10,7 @@ from loguru import logger
 from iflow_bot.config.schema import Config
 
 # 统一的超时常量定义
-DEFAULT_TIMEOUT = 300  # 默认超时时间（秒）
+DEFAULT_TIMEOUT = 600  # 默认超时时间（秒）
 
 
 def get_config_dir() -> Path:
