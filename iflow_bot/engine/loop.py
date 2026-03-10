@@ -470,6 +470,7 @@ time: {now}
             
             # 清理缓冲区并发送最终内容
             final_content = self._stream_buffers.pop(session_key, "")
+            effective_content = (final_content or response or "").strip()
 
             # QQ 渠道：发送遗留的buffer
             if msg.channel == "qq" and qq_channel:
@@ -509,9 +510,9 @@ time: {now}
                                 metadata={"reply_to_id": msg.metadata.get("message_id")},
                             ))
 
-            if final_content:
+            if effective_content:
                 # 🆕 流式结束后，也用 ResultAnalyzer 分析并附加检测到的文件
-                analysis = result_analyzer.analyze({"output": final_content, "success": True})
+                analysis = result_analyzer.analyze({"output": effective_content, "success": True})
                 media_files = analysis.image_files + analysis.audio_files + analysis.video_files + analysis.doc_files
 
                 if media_files:
@@ -519,7 +520,7 @@ time: {now}
 
                 # 钉钉：直接调用最终更新
                 if msg.channel == "dingtalk" and dingtalk_channel and hasattr(dingtalk_channel, 'handle_streaming_chunk'):
-                    await dingtalk_channel.handle_streaming_chunk(msg.chat_id, final_content, is_final=True)
+                    await dingtalk_channel.handle_streaming_chunk(msg.chat_id, effective_content, is_final=True)
                     # 钉钉流式结束后，单独发送检测到的文件
                     if media_files:
                         await self.bus.publish_outbound(OutboundMessage(
@@ -533,7 +534,7 @@ time: {now}
                     await self.bus.publish_outbound(OutboundMessage(
                         channel=msg.channel,
                         chat_id=msg.chat_id,
-                        content=final_content,
+                        content=effective_content,
                         media=media_files,
                         metadata={
                             "_progress": True,
@@ -565,7 +566,7 @@ time: {now}
                 ))
                 logger.warning(f"Streaming produced empty output for {msg.channel}:{msg.chat_id}")
             
-            return final_content or response
+            return effective_content or response
             
         except Exception as e:
             # 清理缓冲区
