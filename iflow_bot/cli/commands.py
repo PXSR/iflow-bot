@@ -1337,7 +1337,8 @@ app.command(name="config")(config_cmd)
 
 def _run_iflow_cmd(cmd: list[str], cwd: Optional[Path] = None) -> int:
     """执行 iflow 命令（跨平台）。"""
-    kwargs = {"cwd": str(cwd) if cwd else None}
+    resolved_cwd = cwd.expanduser() if cwd else None
+    kwargs = {"cwd": str(resolved_cwd) if resolved_cwd else None}
     result = run_command(cmd, **kwargs)
     return result.returncode
 
